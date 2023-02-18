@@ -1,0 +1,12 @@
+#my-canvas{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(to left top, #e93bdd, #ff2f95, #ff6756, #fd9b2c, #cfc237, #b4d354, #98e177, #7aed9e, #72f1ac, #6af4bb, #64f8c9, #5ffbd6);
+}
+h1 {
+  z-index: -1;
+  height: 50px;
+}
