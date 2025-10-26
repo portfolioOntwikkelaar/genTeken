@@ -1,51 +1,71 @@
 const canvas = document.getElementById("my-canvas");
 const ctx = canvas.getContext("2d");
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+resizeCanvas();
+
+window.addEventListener("resize", resizeCanvas);
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
 
 class Point {
   constructor(x, y) {
     this.x = x;
     this.y = y;
-    this.radius = 0.3;
   }
-
-  draw(){
+  draw(color, size) {
     ctx.beginPath();
-    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+    ctx.arc(this.x, this.y, size, 0, Math.PI * 2);
+    ctx.fillStyle = color;
     ctx.fill();
   }
 }
 
-const triangleTop = new Point(window.innerWidth / 2, 50);
-triangleTop.draw();
-const triangleBottomLeft = new Point(50, window.innerHeight - 50);
-triangleBottomLeft.draw();
-const triangleBottomRight = new Point(window.innerWidth - 50, window.innerHeight - 50);
-triangleBottomRight.draw();
+const triangle = [
+  new Point(window.innerWidth / 2, 80),
+  new Point(80, window.innerHeight - 80),
+  new Point(window.innerWidth - 80, window.innerHeight - 80),
+];
 
-const triangle = [triangleTop, triangleBottomLeft, triangleBottomRight];
-
-function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max-min)) + min;
+function randomColor(time) {
+  const r = 128 + Math.sin(time * 0.001) * 127;
+  const g = 128 + Math.sin(time * 0.001 + 2) * 127;
+  const b = 128 + Math.sin(time * 0.001 + 4) * 127;
+  return `rgba(${r}, ${g}, ${b}, 0.8)`;
 }
 
-function drawRest(prevPoint) {
-  let randomCorner, middlePoint;
+function drawFractal(startPoint, time) {
+  let prev = startPoint;
+  const total = 80000;
+  let colorShift = 0;
 
-  for (var i = 0; i < 100000; i++) {
-    randomCorner = triangle[getRandomInt(0, 3)];
-
-    middlePoint = new Point((prevPoint.x + randomCorner.x) / 2, (prevPoint.y + randomCorner.y) / 2 );
-    middlePoint.draw();
-    prevPoint = middlePoint;
+  for (let i = 0; i < total; i++) {
+    const corner = triangle[Math.floor(Math.random() * 3)];
+    const mid = new Point((prev.x + corner.x) / 2, (prev.y + corner.y) / 2);
+    const color = randomColor(time + i * 0.002);
+    mid.draw(color, 0.6 + Math.sin(i * 0.001) * 0.3);
+    prev = mid;
   }
 }
 
-canvas.addEventListener("click", function(e){
-  const firstPoint = new Point(e.x, e.y);
-  firstPoint.draw();
-  drawRest(firstPoint);
-},
-  {once: true}
-)
+let animationRunning = false;
+let time = 0;
+
+function animate(startPoint) {
+  if (!animationRunning) return;
+  time += 1;
+  ctx.fillStyle = "rgba(0, 0, 0, 0.08)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  drawFractal(startPoint, time);
+  requestAnimationFrame(() => animate(startPoint));
+}
+
+canvas.addEventListener("click", (e) => {
+  const start = new Point(e.x, e.y);
+  if (!animationRunning) {
+    animationRunning = true;
+    document.getElementById("instructions").style.display = "none";
+    animate(start);
+  }
+});
