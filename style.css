@@ -1,12 +1,55 @@
-#my-canvas{
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: 'Orbitron', sans-serif;
+  background: radial-gradient(circle at 50% 50%, #090909, #000);
+  color: #00ffd0;
+  text-align: center;
+}
+
+#my-canvas {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: linear-gradient(to left top, #e93bdd, #ff2f95, #ff6756, #fd9b2c, #cfc237, #b4d354, #98e177, #7aed9e, #72f1ac, #6af4bb, #64f8c9, #5ffbd6);
+  background: radial-gradient(circle at center, #050505, #000);
+  cursor: crosshair;
 }
+
 h1 {
-  z-index: -1;
-  height: 50px;
+  position: absolute;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 2em;
+  letter-spacing: 2px;
+  color: #00ffe0;
+  text-shadow: 0 0 10px #00ffe0, 0 0 25px #00ffff;
+  animation: glow 3s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+#instructions {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1rem;
+  animation: fade 3s infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes glow {
+  from { text-shadow: 0 0 10px #00ffe0; }
+  to { text-shadow: 0 0 25px #00ffff, 0 0 50px #00ffe0; }
+}
+
+@keyframes fade {
+  0% { opacity: 0.2; }
+  100% { opacity: 1; }
 }
